@@ -1,126 +1,112 @@
-#include <stdio.h>
+// used arjun charak's code
+#include <stdio.h>  //using the required header files
 #include <stdlib.h>
-
-struct stack  // declaring the stack
+#include <string.h>
+#include <limits.h>
+struct Stack
 {
-    int maxSize; // maximum size of the stack entered by the user
-    int top;     // the index of the recently pushed element 
-    char *arr;   // array for storing the expression
+   char *data;
+   int maxSize; // maximum size of the stack.
+   int top; //initially size of of the stack is 0.
 };
-
-int isEmpty(struct stack *ptr) // function to check if the stack is empty
+// we are creating a function to check whether the stack is empty or not.
+int isEmpty(struct Stack *stack)
 {
-    if (ptr->top == -1)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+   if(stack->top == -1){   //if the top is -1, that means the stack is empty
+      return 1;
+   }
+   else{
+      return 0;
+   }
 }
-
-int isFull(struct stack *ptr) // function to chexk if the stack is full 
+// we are creating a function to check whether the stack is full or not.
+int isFull(struct Stack *stack)
 {
-    if (ptr->top == ptr->maxSize - 1)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+   if(stack->top == stack->maxSize - 1)   // it means the stack is full
+   {
+      return 1;
+   }
+   else
+   {
+      return 0;
+   }
 }
-
-void push(struct stack *ptr, char val)   // function for pushing a new element to the stack
+// creating a new function to push an element into the stack.
+char push(struct Stack *stack, char value)
 {
-    if (isFull(ptr))
-    {
-        printf("Stack Overflow! Cannot push %c to the stack\n", val);
-    }
-    else
-    {
-        ptr->top++;
-        ptr->arr[ptr->top] = val;
-    }
+   if(isFull(stack))
+   {
+      printf("\nStack Overflow\n");
+   }
+   else
+   {
+      stack->top++;    //the new element will be pushed into the stack
+      stack->data[stack->top] = value;   //the value will also change since there will be increase in the size of the stack
+   }
 }
-
-void pop(struct stack *ptr)   //   function for popping an element from the stack
+// creating a function to pop the top element from the stack.
+char pop(struct Stack *stack, char value)
 {
-    if (isEmpty(ptr))
-    {
-        printf("Stack is empty cannot pop from the stack\n");
-    }
-    else
-    {
-        ptr->top--;
-    }
+   if(isEmpty(stack))
+   {
+      printf("\nStack Underflow\n");
+      return '\0';
+   }
+   else
+   {
+      value = stack->data[stack->top];  //the topmost element gets popped off
+      stack->top--;  // the size of the stack will change since an element is removed
+      return value;
+   }
 }
-
-int parenthesisMatch(char *exp, struct stack *ptr)  // function for checking if the parenthesis is balanced or not 
+// creating a new function to display the top element of the stack.
+int topStack(struct Stack *stack)
 {
-
-    for (int i = 0; exp[i] != '\0'; i++)   // for loop for traversing through the expression for checking the paranthesis
-    {
-        if (exp[i] == '(')
-        {
-            push(ptr, '(');   // pushing the starting parenthesis to the stack
-        }
-        else if (exp[i] == ')')
-        {
-            if (isEmpty(ptr))
-            {
-                return 0;
-            }
-            pop(ptr);   // popping an element from the stack
-        }
-    }
-
-    if (isEmpty(ptr))
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+   int top;
+   if (isEmpty(stack))
+   {
+      printf("\nStack is empty! \n");
+   }
+   else{
+      return top = stack->data[stack->top];  //it will scan all the elements and display the topmost
+   }
 }
 int main()
 {
-    struct stack *stackPointer = (struct stack *)malloc(sizeof(struct stack)); // creating an instance for the struct stack using malloc
-    stackPointer->top = -1;
-    stackPointer->arr = (char *)malloc(stackPointer->maxSize * sizeof(char));
-    int choice;
-    do
-    {
-        printf("\nEnter 1 for performing the parenthesis check\nPress 2 for exiting the program\n");
-        scanf("%d", &choice);
-        switch (choice)
-        {
-        case 1:
-            printf("Enter the size of the expression\n");
-            scanf("%d", &stackPointer->maxSize);
-            printf("Enter the expression\n");
-            scanf("%s", stackPointer->arr); 
-            if (parenthesisMatch(stackPointer->arr, stackPointer))  // checking what the function returned
-            {
-                printf("The parenthesis is matching\n");
-            }
-            else
-            {
-                printf("The parenthesis is not matching\n");
-            }
-            break;
-
-        case 2:
-            printf("Quitting the program\n");
-            break;
-
-        default:
-            printf("Enter a valid expression\n");
-            break;
-        }
-    } while (choice != 2);
-    free(stackPointer->arr); //Freeing memory
-    return 0;
+   int expressionSize;
+   char expression[100];   // expression is simply the size of the stack
+   struct Stack stackA;
+   stackA.top = -1;   // it means the stack is empty
+   printf("\nEnter the expression : \n");
+   gets(expression);   // gets to store the value of the string
+   expressionSize = strlen(expression); // strlen signifies the length of the string
+   stackA.maxSize = expressionSize;     // keeping the size of the stack equal to the expression size
+   stackA.data = (char *)malloc(stackA.maxSize * sizeof(char));   //dynamically re-allocating memory for new stack
+   for (int i = 0; i < expressionSize; i++)   //initializing from index 0 to maximum index
+   {
+      if (expression[i] == '(' || expression[i] == '{' || expression[i] == '[')
+      {
+         push(&stackA, expression[i]);  // a new type of bracket will be pushed in the stack
+      }
+      if (expression[i] == ')' || expression[i] == '}' || expression[i] == ']')
+      {
+         if ((stackA.data[stackA.top] == '(' && expression[i] == ')') || (stackA.data[stackA.top] == '{' && expression[i] == '}') || (stackA.data[stackA.top] == '[' && expression[i] == ']'))
+         {
+            int temp = pop(&stackA, expression[i]);  //if the bracket is the closing part of the first one, then the pair gets popped off the stack
+         }
+         else
+         {
+            return 0;
+         }
+      }
+   }
+   if (isEmpty(&stackA))
+   {
+      printf("\nParenthesis is balanced. \n");
+   }
+   else
+   {
+      printf("\nParenthesis is not balanced. \n");
+   }
+   return 0;
 }
