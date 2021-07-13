@@ -1,7 +1,7 @@
 // used arjun charak's code
 #include <stdio.h>  //using the required header files
 #include <stdlib.h>
-#include <string.h>
+#include <string.h>  //important for the paranthesis checking  part of the code
 #include <limits.h>
 struct Stack
 {
@@ -78,7 +78,7 @@ int main()
    struct Stack stackA;
    stackA.top = -1;   // it means the stack is empty
    printf("\nEnter the expression : \n");
-   gets(expression);   // gets to store the value of the string
+   gets(expression);   // gets() is usedc to store the value in the string
    expressionSize = strlen(expression); // strlen signifies the length of the string
    stackA.maxSize = expressionSize;     // keeping the size of the stack equal to the expression size
    stackA.data = (char *)malloc(stackA.maxSize * sizeof(char));   //dynamically re-allocating memory for new stack
@@ -106,7 +106,7 @@ int main()
    }
    else
    {
-      printf("\nParenthesis is not balanced. \n");
+      return 0;
    }
    return 0;
 }
